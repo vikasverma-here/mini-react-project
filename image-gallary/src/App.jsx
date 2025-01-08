@@ -5,8 +5,8 @@ const App = () => {
   const [image, setImage] = useState([]); 
   const [search, setSearch] = useState('');
   const [query,setQuery]= useState("dog")
-  const [managePage,setMangepage] = useState("1")
- 
+  let [managePage,setMangepage] = useState("1")
+ console.log(managePage)
 console.log(search)
   const api_key = "KVHI6IQmtJVUUquD-V0o20b6J1hREjEJFM-XuMASVQg";
   const api_url = "https://api.unsplash.com/search/photos";
@@ -26,7 +26,7 @@ console.log(search)
     fetchData();
  
    
-  }, [query]); 
+  }, [query,managePage]); 
 
   const submitHandler = (e)=>{
 e.preventDefault()
@@ -35,6 +35,7 @@ if (search.trim()) {
   setSearch(''); 
 }
   }
+
 
  
 
@@ -65,9 +66,13 @@ if (search.trim()) {
     </div>
 
     <div className="footer">
-      <button className='pre' >Previous</button>
-      <h1>10</h1>
-      <button>Next</button>
+    <button onClick={() => setMangepage((prev) => Math.max(prev - 1, 1))} 
+          disabled={managePage === 1} >Previous</button>
+      <h1>{managePage}  TO  20</h1>
+
+
+
+<button className='pre' onClick={() => setMangepage((prev) => prev + 1)} >Next</button>
     </div>
     </div>
    
