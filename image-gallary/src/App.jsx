@@ -1,11 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
 import axios from 'axios';
 import './App.css'
+import { Link } from 'react-router-dom';
+// import Fullimage from './Fullimage';
 const App = () => {
   const [image, setImage] = useState([]); 
+  // console.log(image)
   const [search, setSearch] = useState('');
   const [query,setQuery]= useState("dog")
-  let [managePage,setMangepage] = useState("1")
+
+
+  const [managePage,setMangepage] = useState("1")
  console.log(managePage)
 console.log(search)
   const api_key = "KVHI6IQmtJVUUquD-V0o20b6J1hREjEJFM-XuMASVQg";
@@ -36,6 +42,11 @@ if (search.trim()) {
 }
   }
 
+  
+
+
+  
+  
 
  
 
@@ -58,24 +69,24 @@ if (search.trim()) {
       </form>
        <div className='container' >
       {image.map((img) => (
-        <div key={img.id}>
+        <Link to={`/fullimage/:${img.id}`} key={img.id}>
           <img src={img.urls.small} alt={img.alt_description} />
-        </div>
+        </Link>
       ))}
     
     </div>
 
     <div className="footer">
-    <button onClick={() => setMangepage((prev) => Math.max(prev - 1, 1))} 
+    <button  onClick={() => setMangepage((prev) => Math.max(prev - 1, 1))} 
           disabled={managePage === 1} >Previous</button>
-      <h1>{managePage}  TO  20</h1>
+      
 
 
 
 <button className='pre' onClick={() => setMangepage((prev) => prev + 1)} >Next</button>
     </div>
     </div>
-   
+  
   );
 };
 
