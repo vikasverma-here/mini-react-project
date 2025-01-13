@@ -4,11 +4,13 @@ import { useForm } from 'react-hook-form';
 const App = () => {
   const [contacts, setContacts] = useState([]);
   const [image, setImage] = useState(null);
-  // const [imageUrl, setImageUrl] = useState('');  // To store image URL from Cloudinary
+  const [editIndex, setEditIndex] = useState(null); // Track the index of the contact being edited
+
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm();
 
@@ -18,44 +20,87 @@ const App = () => {
   }, []);
 
   const onSubmit = async (data) => {
-    if (image) {
-      try {
-        // Create FormData for Cloudinary
-        const newData = new FormData();
-        newData.append('file', image);
-        newData.append('upload_preset', 'contactImage');
-        newData.append('cloud_name', 'de2ak09qu');
+    let updatedContacts = [...contacts];
 
-        // Upload image to Cloudinary
-        const response = await fetch('https://api.cloudinary.com/v1_1/de2ak09qu/image/upload', {
-          method: 'POST',
-          body: newData,
-        });
+    if (editIndex !== null) {
+      // Editing existing contact
+      updatedContacts[editIndex] = { ...updatedContacts[editIndex], ...data };
 
-        const result = await response.json();
-        if (result.secure_url) {
-          // Now, add image URL to the contact data
-          const updatedContact = { ...data, imageUrl: result.secure_url };
-          const updatedContacts = [...contacts, updatedContact];
-          localStorage.setItem('contacts', JSON.stringify(updatedContacts));
-          setContacts(updatedContacts);
+      if (image) {
+        try {
+          const newData = new FormData();
+          newData.append('file', image);
+          newData.append('upload_preset', 'contactImage');
+          newData.append('cloud_name', 'de2ak09qu');
+
+          const response = await fetch(
+            'https://api.cloudinary.com/v1_1/de2ak09qu/image/upload',
+            {
+              method: 'POST',
+              body: newData,
+            }
+          );
+
+          const result = await response.json();
+          if (result.secure_url) {
+            updatedContacts[editIndex].imageUrl = result.secure_url;
+          }
+        } catch (error) {
+          console.error('Error uploading image:', error);
         }
-      } catch (error) {
-        console.error('Error uploading image:', error);
       }
+    } else {
+      // Adding a new contact
+      if (image) {
+        try {
+          const newData = new FormData();
+          newData.append('file', image);
+          newData.append('upload_preset', 'contactImage');
+          newData.append('cloud_name', 'de2ak09qu');
+
+          const response = await fetch(
+            'https://api.cloudinary.com/v1_1/de2ak09qu/image/upload',
+            {
+              method: 'POST',
+              body: newData,
+            }
+          );
+
+          const result = await response.json();
+          if (result.secure_url) {
+            data.imageUrl = result.secure_url;
+          }
+        } catch (error) {
+          console.error('Error uploading image:', error);
+        }
+      }
+
+      updatedContacts.push(data);
     }
 
-    
+    setContacts(updatedContacts);
+    localStorage.setItem('contacts', JSON.stringify(updatedContacts));
+
     reset();
-    setImage(null); 
+    setImage(null);
+    setEditIndex(null); // Reset edit index after submission
   };
 
+  const handleDelete = (index) => {
+    const updatedContacts = contacts.filter((_, i) => i !== index);
+    setContacts(updatedContacts);
+    localStorage.setItem('contacts', JSON.stringify(updatedContacts));
+  };
 
-  const handleDelete = (index)=>{
-  }
-  const handleEdit = ()=>{
+  const handleEdit = (index) => {
+    const contact = contacts[index];
+    setEditIndex(index); // Set the index of the contact being edited
 
-  }
+    // Prefill form fields
+    setValue('name', contact.name);
+    setValue('email', contact.email);
+    setValue('phone', contact.phone);
+  };
 
   return (
     <div>
@@ -115,7 +160,9 @@ const App = () => {
           />
         </div>
 
-        <button type="submit">Submit</button>
+        <button type="submit">
+          {editIndex !== null ? 'Update Contact' : 'Add Contact'}
+        </button>
       </form>
 
       {/* Display all submitted contacts */}
@@ -128,15 +175,20 @@ const App = () => {
                 <img
                   src={contact.imageUrl}
                   alt="Contact"
-                  
+                  style={{ width: '100px', height: '100px' }}
                 />
               )}
-              <p><strong>Name:</strong> {contact.name}</p>
-              <p><strong>Email:</strong> {contact.email}</p>
-              <p><strong>Phone:</strong> {contact.phone}</p>
-              <button onClick={()=>handleDelete(index)} >Delete</button>
-              <button onClick={handleEdit} >Edit</button>
-              
+              <p>
+                <strong>Name:</strong> {contact.name}
+              </p>
+              <p>
+                <strong>Email:</strong> {contact.email}
+              </p>
+              <p>
+                <strong>Phone:</strong> {contact.phone}
+              </p>
+              <button onClick={() => handleDelete(index)}>Delete</button>
+              <button onClick={() => handleEdit(index)}>Edit</button>
             </div>
           ))}
         </div>
