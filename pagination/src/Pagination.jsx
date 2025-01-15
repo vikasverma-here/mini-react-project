@@ -3,7 +3,7 @@ import { getProducts } from './services/Getproduct';
 import { useState } from 'react';
 import Cart from './Cart';
 const Pagination = () => {
-   const [count, setcount] = useState(10)
+   const [count, setcount] = useState(0)
   //  const [showpage, setshowpage] = useState(0)
     const [Allproducts, setAllproducts] = useState([]);
     // const [currentPage, setCurrentPage] = useState(1);
@@ -40,7 +40,8 @@ const Pagination = () => {
          <h1>{currentPage}</h1>
 
 
-         <button onClick={() => setcount((prev) => prev + 10)}>Next</button>
+         <button onClick={() => setcount((prev) =>
+                            prev + itemsPerPage < 200 ? prev + itemsPerPage : prev)}>Next</button>
       </div>
     </div>
   )
