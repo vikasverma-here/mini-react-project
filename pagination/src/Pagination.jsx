@@ -4,9 +4,9 @@ import { useState } from 'react';
 import Cart from './Cart';
 const Pagination = () => {
    const [count, setcount] = useState(0)
-  //  const [showpage, setshowpage] = useState(0)
+ 
     const [Allproducts, setAllproducts] = useState([]);
-    // const [currentPage, setCurrentPage] = useState(1);
+  
     const itemsPerPage = 10;
     const prooduct = async()=>{
 

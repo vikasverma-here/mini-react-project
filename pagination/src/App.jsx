@@ -1,7 +1,7 @@
 import React from 'react'
 import Pagination from './Pagination'
 import Details from '../Details'
-import { Routes , Route } from 'react-router-dom'
+// import { Routes , Route, BrowserRouter } from 'react-router-dom'
 
 const App = () => {
 
