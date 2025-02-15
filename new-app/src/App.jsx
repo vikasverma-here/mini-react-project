@@ -1,15 +1,22 @@
 import React, { useContext, useEffect } from "react";
 import { ArticleContext } from "./context/NewsContext";
-
+import { useState } from "react";
 import "./App.css";
 const App = () => {
-  const [input, setinput] = useState()
-  const newsData = useContext(ArticleContext);
-  console.log(newsData);
+  
+  // console.log(input)
+  const newsData= useContext(ArticleContext);
+  const {input,setinput} = useContext(ArticleContext)
+  
+  // console.log(newsData);
+const handleSubmit = (e)=>{
+e.preventDefault()
+}
+
   return (newsData.newsData.length===0)?(<h1>Loading</h1>): (
     <>
-    <form>
-      <input type="text" placeholder="serch-here" onChange={()=>}  />
+    <form onSubmit={handleSubmit}>
+      <input type="text" placeholder="serch-here" value={input} onChange={(e)=> setinput(e.target.value)}  />
       <button>Search</button>
     </form>
     <div className="container">

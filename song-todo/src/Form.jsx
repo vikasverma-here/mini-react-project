@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import ShowTask from './showTask';
 import { nanoid } from 'nanoid';
 const Form = () => {
@@ -21,13 +21,27 @@ const obj ={
 
 const handlesubmit = (e)=>{
 e.preventDefault()
-setcards([...cards,obj])
+
+ setcards([...cards,obj])
+
+
+
 setname("")
 setalbum("")
 seturl("")
 setsinger("")
-// console.log(cards)
+console.log(cards)
 }
+
+
+
+
+
+
+
+ 
+
+
 
 
 

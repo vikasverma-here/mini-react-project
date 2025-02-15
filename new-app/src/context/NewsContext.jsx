@@ -5,11 +5,11 @@ export const ArticleContext = createContext([])
 export const ArtcileProvider =({children})=>{
 
     const [newsData, setnewsData] = useState([])
-
-    
+    const [input, setinput] = useState()
+    console.log(input)
   const fetchData = async()=>{
     var url = 'https://newsapi.org/v2/everything?' +
-  'q=modi&' +'apiKey=018087701f8f4d1da5ec6258f13c9b0c';
+  `q=${input}&` +'apiKey=018087701f8f4d1da5ec6258f13c9b0c';
     const data= await fetch(url)
     const json = await data.json()
     // console.log(json.articles)
@@ -18,10 +18,10 @@ export const ArtcileProvider =({children})=>{
 
   useEffect(()=>{
    fetchData()
-  },[])
+  },[input])
 
 
-    return <ArticleContext.Provider value={{newsData}} >
+    return <ArticleContext.Provider value={{newsData ,input,setinput}} >
 {children}
     </ArticleContext.Provider>
 }
